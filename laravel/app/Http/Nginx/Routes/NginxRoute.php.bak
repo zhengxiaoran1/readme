@@ -1,0 +1,72 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: zhuyujun
+ * Date: 2017/11/13
+ * Time: 11:29
+ */
+
+namespace App\Http\Nginx\Routes;
+
+use Illuminate\Contracts\Routing\Registrar;
+
+
+class NginxRoute
+{
+    public function map(Registrar $router)
+    {
+        $router->group(['namespace' => 'Nginx\Controllers', 'prefix' => ''], function ($router) {
+            //首页，独立于框架
+            $setFunction = 'home';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //首页数据库版
+            $setFunction = 'data';
+            $router->get('/' . $setFunction, 'DataController@' . $setFunction);
+            $router->post('/' . $setFunction, 'DataController@' . $setFunction);
+
+            //边导航
+            $setFunction = 'getSideMenu';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //日志列表页
+            $setFunction = 'nginxLog';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //日志列表页数据
+            $setFunction = 'nginxLogData';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //ip用户映射表
+            $setFunction = 'getIpUserSelect';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //模拟数据测试
+            $setFunction = 'analogTest';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //自定义模拟访问
+            $setFunction = 'virtualVisits';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //自定义模拟访问-结果
+            $setFunction = 'virtualVisitsData';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+            //服务器上传路径
+            $setFunction = 'path';
+            $router->get('/' . $setFunction, 'IndexController@' . $setFunction);
+            $router->post('/' . $setFunction, 'IndexController@' . $setFunction);
+
+        });
+    }
+
+}

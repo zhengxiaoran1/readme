@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="/assets/mobile/common/mobile.css">
+<link rel="stylesheet" href="/assets/mobile/layuiadmin/layui/css/layui.css">
+<style>
+    #order-list tr th{
+        text-align:center;
+    }
+</style>
+<div class="layui-form">
+    <table class="layui-table" id="order-list">
+        <colgroup>
+            <col width="150">
+            <col width="150">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>产品图片</th>
+            <th>产品名称</th>
+            <th>编号</th>
+            <th>规格</th>
+            <th>打包</th>
+            <th>已交货</th>
+            <th>总件数</th>
+            <th>总条数</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="out-bill-lists">
+
+        </tbody>
+    </table>
+    <div id="out-bill-page"></div>
+
+</div>
+<script src="/assets/mobile/common/com.js"></script>
+<script src="/assets/mobile/order/js/jquery-1.10.2.js"></script>
+<script src="/assets/admin/art-template.js"></script>
+<script type="application/javascript">
+    page_control.page = 1;
+    page_control.page_html_box = $('#out-bill-page');
+    $('#out-bill-page').hide();
+    function getOutBillData(){
+
+        ygt_control.data = {customer_id:'all',page: page_control.page,};
+        ygt_control.url  = "/api/service/warehouse/out-bill";
+        ygt_control.ajax(function(data){
+            console.log(data);
+            if (data.data.length > 0 ){
+                $('#out-bill-page').show();
+            }else{
+                var _tip = "<tr>\n" +
+                    "                <td colspan='9' align='center'>暂无交货单</td>\n" +
+                    "            </tr>";
+                $("#out-bill-lists").html(_tip)
+            }
+            var _html = template('out-bill-list', data);
+            $('#out-bill-lists').html("").append(_html);
+            page_control.init(data.paging.total_page,data.paging.page,'getOutBillData');
+        });
+    }
+    getOutBillData();
+
+
+    function printDetail(id) {
+        var url = '/mobile/customer/printDetail?id='+id;
+        var name = '打印交货单';
+        var iWidth=1100; //弹出窗口的宽度;
+        var iHeight=550; //弹出窗口的高度;
+        var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+        var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+        window.open(url,name,"height="+iHeight+", width="+iWidth+", top="+iTop+", left="+iLeft+",toolbar=no, menubar=no,  scrollbars=yes,resizable=yes,location=no, status=no");
+    }
+
+</script>
+<script type="text/html" id="out-bill-list">
+
+    <%for( i = 0; i < data.length; i++) {%>
+    <% var obj = data[i];%>
+    <tr style="background-color: #f2f2f2">
+        <td colspan='8' class='out-list' align="left">交货单编号：<%= obj.sn %></td>
+        <td align='center'><button type="button" class="layui-btn layui-btn-normal layui-btn-radius" onclick='printDetail(<%= obj.id %>)'>打印</button></td>
+    </tr>
+        <%for( m = 0; m < obj.data.length; m++) {%>
+        <% var value = obj.data[m]; %>
+        <tr>
+            <td align='center'><img src='<%= value.img_path %>' style='width: 40px; height:40px'/></td>
+                <td align='center'><%= value.product_name %></td>
+                <td align='center'><%= value.bh %></td>
+                <td align='center'><%= value.finished_specification %></td>
+                <td align='center'><%= value.pack %></td>
+                <td align='center'><%= value.send_info %></td>
+                <td align='center'><%= value.str_out_pre %></td>
+                <td align='center'><%= value.pre_number %></td>
+            </tr>
+        <% } %>
+    <% } %>
+
+</script>

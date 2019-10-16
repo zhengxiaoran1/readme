@@ -1,0 +1,92 @@
+#集合材料
+create view view_storehouse_assemblage_material as
+select
+yam.*,
+ysr.number as storehouse_number,
+ysr.in_number as storehouse_in_number,
+ysr.out_number as storehouse_out_number,
+ysr.lock_number as storehouse_lock_number,
+ysr.storehouse_id as storehouse_id
+from ygt_assemblage_material as yam
+inner JOIN ygt_storehouse_res as ysr
+on ysr.res_id = yam.id
+where ysr.res_type = 5;
+
+#子材料
+create view view_storehouse_product as
+select
+yp.*,
+ysr.number as storehouse_number,
+ysr.in_number as storehouse_in_number,
+ysr.out_number as storehouse_out_number,
+ysr.lock_number as storehouse_lock_number,
+ysr.storehouse_id as storehouse_id
+from ygt_product as yp
+inner JOIN ygt_storehouse_res as ysr
+on ysr.res_id = yp.id
+where ysr.res_type = 1;
+
+#半成品
+create view view_storehouse_process_product as
+select
+ypp.*,
+ysr.number as storehouse_number,
+ysr.in_number as storehouse_in_number,
+ysr.out_number as storehouse_out_number,
+ysr.lock_number as storehouse_lock_number,
+ysr.storehouse_id as storehouse_id
+from ygt_process_product as ypp
+inner JOIN ygt_storehouse_res as ysr
+on ysr.res_id = ypp.id
+where ysr.res_type = 2;
+
+#成品
+create view view_storehouse_warehouse as
+select
+yw.*,
+ysr.number as storehouse_number,
+ysr.in_number as storehouse_in_number,
+ysr.out_number as storehouse_out_number,
+ysr.lock_number as storehouse_lock_number,
+ysr.storehouse_id as storehouse_id
+from ygt_warehouse as yw
+inner JOIN ygt_storehouse_res as ysr
+on ysr.res_id = yw.id
+where ysr.res_type = 3;
+
+#废品
+create view view_storehouse_waste as
+select
+yw.*,
+ysr.number as storehouse_number,
+ysr.in_number as storehouse_in_number,
+ysr.out_number as storehouse_out_number,
+ysr.lock_number as storehouse_lock_number,
+ysr.storehouse_id as storehouse_id
+from ygt_waste as yw
+inner JOIN ygt_storehouse_res as ysr
+on ysr.res_id = yw.id
+where ysr.res_type = 4;
+
+#退品
+create view view_storehouse_returned_product as
+select
+yp.*,
+ymr.id as material_retreat_id,
+ymr.number as material_retreat_number,
+ymr.number_all as material_retreat_all_number,
+ysr.number as storehouse_number,
+ysr.in_number as storehouse_in_number,
+ysr.out_number as storehouse_out_number,
+ysr.lock_number as storehouse_lock_number,
+ysr.storehouse_id
+from ygt_material_retreat as ymr
+INNER JOIN
+ygt_product yp
+on
+ymr.material_id = yp.id
+INNER JOIN
+ygt_storehouse_res as ysr
+ON
+ymr.id = ysr.res_id
+where ysr.res_type = 6
